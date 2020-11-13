@@ -220,9 +220,741 @@
 		//2 21
 		//3 21
 
-2.4 列表 list
-	
+2.4 列表 list -- 可以快速增加删除的非连续空间的容器
+	列表有多种实现方法，单链表 双链表
+	2.4.1 初始化列表
+		变量名：= list.New()
+		var 变量名 list.List
 
+	2.4.2 在列表中插入元素
+		l := list.List{}
+		l.PushBack("123")//尾部添加
+		l.PushFront("345")
+		l.PushFront("456")
+		l.PushBack("456")
+		el := l.PushBack("345")
+		for i := l.Front() ; i != nil;i = i.Next() {
+			fmt.Println(i.Value)
+		}
+		l.Remove(el)
+		fmt.Println("remove")
+		for i := l.Front() ; i != nil;i = i.Next() {
+			fmt.Println(i.Value)
+		}
+		fmt.Println(l , l.Len())
+
+3 流程控制
+	3.1 条件判断（if）
+		if 表达式 {
+
+		}else if 表达式2{
+
+		}else {
+
+		}
+		特殊写法
+		if err := Connect();err != nil {
+			fmt.println(err)
+			return 
+		}
+	3.2 循环 for
+		for 出事语句；条件表达式；结束语句 {
+			循环体代码
+		}
+		step ：= 2
+		for ; ; step ++ {
+			if step < 10 {
+				break
+			}
+		}
+
+		无限循环代码
+
+		for {
+			循环体代码
+		}
+
+		九九乘法表代码：
+		for i := 1 ; i <= 9 ; i++  {
+			for j := 1 ; j <= 9 ; j ++ {
+				if i < j {
+					continue
+				}
+				fmt.Print(j ,"*" , i , "=" , i*j , " ")
+			}
+			fmt.Println()
+		}
+		键值循环 for range
+		//chan
+		ch := make([]chan , 10)
+		for k , v := range ch {
+			fmt.Println(k , v)
+		}
+		//map
+		var m = make(map[string]string , 10)
+		m["12"] = "123"
+		for k , v := range m {
+			fmt.Println("aaa" , k , v)
+		}
+		//string
+		var s = "123456"
+		for k , v := range s {
+			fmt.Println(" k => v " , k , v)
+		}
+
+		//数组
+		var a = [3]int{1,2,3}
+		for k , v := range a {
+			fmt.Println(k , v)
+		}
+		//切片
+		s := [...]int{1,2,3,4,5,6}
+		for k , v := range s {
+			fmt.Println(k , v)
+		}
+	3.3 分支 switch
+		case 不需要break 如果case 1执行成功 需要继续下一个case执行可以 fallthrough
+
+		var a = 1
+		switch a {
+			case 1:
+				fmt.Println(1)
+			case 2:
+				fmt.Println(2)
+			default:
+				fmt.Println(0)
+		}
+		一分支可多值：
+		case 1 , 2:
+		分支表达式：
+		case r > 10 && r < 100:
+
+		var a = 1
+		switch {
+		case a == 1:
+			fmt.Println("1")
+			fallthrough//执行紧接着下一个case 会打印出 ==2
+		case a == 2:
+			fmt.Println("==2")
+		case a < 2:
+			fmt.Println("< 2")
+		default:
+			fmt.Println("   ")
+		}
+
+
+	3.4 跳转到指定代码块标签 goto
+
+4 函数
+	函数是组织好的 可重复使用的 用来实现单一或相关功能的代码段 可以提高应用的模块性和代码的重复利用率
+	支持普通函数 匿名函数和闭包
+	函数属于一等公民
+	函数可以作为值进行传递
+	支持匿名函数 和闭包
+	函数可以满足接口
+
+	4.1.1 函数的声明
+		原型：
+		func 函数名(参数列表)(返回参数列表){
+
+		}
+	4.1.2 参数简写
+		func 函数名 (a , b int)(a , b int){}
+	4.1.3 支持多返回值
+		func 函数名 (a , b int)(a , b int){}
+	4.1.4 调用函数
+		res , err := add(1,1)
+
+	4.1.5 示例：将秒解析为时间单位
+		const p = 60
+		func resolveTime(s int) (d , h , m int)  {
+			m = s/p
+			h = s/p/p
+			d = s/p/p/p
+			return
+		}
+		func main() {
+			fmt.Println(resolveTime(9000))
+		}
+	4.1.6 示例：函数中的参数传递效果测试
+		type InnerData struct {
+			a int
+		}
+		type Data struct {
+			complex []int
+			instance InnerData
+			ptr *InnerData
+		}
+
+		func passByValue(in Data) Data {
+			fmt.Printf("打印参数 %+v\n" , in)
+			fmt.Printf("打印指针 %p\n" , &in)
+			return in
+		}
+
+		func main() {
+			in := Data{
+				complex: []int{1,2,3},
+				instance: InnerData{
+					a: 2,
+				},
+				ptr: &InnerData{
+					a:3,
+				},
+			}
+			fmt.Printf("in value :%+v\n" , in)
+			fmt.Printf("in value :%p\n" , &in)
+			out := passByValue(in)
+			fmt.Printf("out value :%+v\n" , out)
+			fmt.Printf("out value :%p\n" , &out)
+		}
+		测试结论
+		1.值传递
+		针对值类型是直接复制一份传递，不影响原数据，对内存占用大的数组和结构体，直接传递会占用比较多的资源，建议采用指针传递
+
+		2.引用传递
+		针对应用类型是复制一份指针进行传递，两个指针指向同一片内存空间，所以会修改原有参数
+
+	4.2 函数变量
+		在go语言中 函数也是一种类型，可以和其他类型一样被保存在变量中 
+		var f = func (a , b int) int {
+			return a + b
+		}
+		fmt.Println(f(1 , 3))
+	4.3 示例：字符串的链式处理
+		string.ToLower()
+
+		。。。。
+	4.4 匿名函数
+		func(参数列表)（返回参数列表）{
+			函数体
+		}
+		在定义时调用函数
+
+		func(a , b int) int {
+			return a + b
+		}(1,2)
+		将匿名函数赋值给变量
+
+		var f = func(a , b int)(int){
+
+			return a + b
+		}
+
+		f(1,2)
+
+		匿名函数用作回调函数
+		func visit(list []int , f func(int)){
+			for _ , v := range list {
+				f(v)
+			}
+		}
+
+		visit([]int{1,2,3,4,5} , func(v int){
+			fmt.Println(v)
+		})
+
+		使用匿名函数实现操作封装
+		var kills = map[string]func(){
+			"kill" : func() {
+				fmt.Println("kill")
+			},
+			"run" : func() {
+				fmt.Println("run")
+			},
+		}
+
+		if f , ok := kills["kill"]; ok{
+			f()
+		}else{
+			fmt.Println("kill no found")
+		}
+
+	4.5 函数类型实现接口
+		结构体实现接口
+		type Invoker interface {
+			Call(interface{})
+		}
+		type S struct {
+
+		}
+
+		func (s *S)Call(i interface{})  {
+			fmt.Println(i)
+		}
+		func main() {
+			s := &S{}
+			s.Call("sss")
+		}
+
+		函数实现接口
+		type F func(interface{})
+		func (f F) Call(i interface{})  {
+			f(i)
+		}
+		func main() {
+			var f = F(func(i interface{}) {
+				fmt.Println(i)
+			})
+			f.Call("fff")
+		}
+
+	4.6 闭包 -- 引用了外部变量的匿名函数
+		在闭包内部修改引用的变量
+		s := "hello jim"
+		f := func() {
+			s = "hello sum"
+		}
+		f()
+		fmt.Println(s)
+		//hello sum
+
+		闭包的记忆效应
+		func sum(i int)func()int  {
+			return func() int {
+				i++
+				return i
+			}
+		}
+		func main() {
+			s := sum(1)
+			fmt.Println(s())//2
+			fmt.Println(s())//3 为什么会是3 因为s匿名函数记录了i的值
+			s1 := sum(10)
+			fmt.Println(s1())
+		}
+
+		示例：玩家属性生成器
+		func playerGen(name string)func()(string , int)  {
+			return func() (string , int) {
+				//玩家昵称 血量
+				return name , 150
+			}
+		}
+		func main() {
+			p := playerGen("p1")
+			fmt.Println(p())
+		}
+	4.7 可变参数
+		所有参数都是可变参数
+		func(a ...interface{}){}
+		部分参数是可变参数
+		func(a string , b ...interface{}){}
+		遍历可变参数列表
+		for k,v := range b {}
+		获得可变参数的类型
+		for k,v := range b{
+			switch v.(type) {
+				case bool:
+				typeString = "bool"
+				case int:
+				typeString = "int"
+			}
+		}
+	4.8 延迟执行语句 defer
+		多个延迟语句的处理顺序
+		func main() {
+			defer fmt.Println("111")
+			defer fmt.Println("222")
+			defer fmt.Println("333")
+		}
+		//333
+		//222
+		//111
+		由下至上顺序执行
+5 结构体
+	5.1 定义结构体
+		type 类型名 struct {
+			字段1 类型
+			字段2 类型
+		}
+		类型名 标识自定义结构体的名称 在同一个包内不能重复
+		struct 标识结构体类型 type类型名 struct可以理解为将struct结构体定义为类型名的类型
+		字段1 字段2 标识结构体的字段名 结构体中的字段名必须唯一
+		同类型的字段可以写在一行
+		type ss struct {
+			a ,b,c int
+		}
+
+	5.2 实例化结构体 -- 为结构体分配内存并初始化
+		type Test struct {
+			X , Y int
+		}
+		基础实例化形式
+		var p Test
+		p.X = 1
+		Py = 2
+		创建指针类型的结构体
+		var p1 = new(Test)
+		p1.X = 1
+		p1.Y = 2
+		取结构体的地址实例化
+		var p2 = &Test{
+			1,
+			2,
+		}
+	5.3 初始化结构体的成员变量
+		键值对初始化结构体
+		ins := &Test{
+			X: 1,
+			Y: 2,
+		}
+		使用多个值的列表初始化结构体
+		ins := &Test{
+			1,
+			2,
+		}
+		初始化匿名结构体
+		ins := struct {
+			X int
+			Y int
+		}{
+			1,
+			2,
+		}
+
+	5.4 构造函数 -- 结构体和类型的一系列初始化操作的函数封装
+		type Cat struct {
+			Name string
+			Color string
+		}
+		func NewCatByName(name string) *Cat {
+			return &Cat{
+				Name: name
+			}
+		}
+		func NewCatByColor(color string)*Cat {
+			return &Cat {
+				Color: color
+			}
+		}
+	5.5 方法
+		go语言的结构体方法
+		type Cat struct {
+			Name string
+			Color string
+		}
+		func NewCat() *Cat {
+			return &Cat{
+
+			}
+		}
+		func (c *Cat)updateColor(color string){
+			c.Color = color
+		}
+		接收器 -- 方法作用的目标
+		
+		func (接收器变量 接收器类型)方法名(参数列表)(返回参数){
+
+		}
+		接收器变量：接收器中的参数变量名的命名时，官方建议使用接收器类型的第一个小写字符 而不是self this之类
+		接收器类型：接收器类型和参数类似，可以是指针类型和非指针类型
+		1.理解指针类型的接收器
+		指针类型的接收器由一个结构体的指针组成，更接近于面向对象中的this或者self
+
+		client := http.Client{}
+		req , err := http.NewRequest("POST" , "http://www.baidu.com" , strings.NewReader("key=value"))
+		if err != nil {
+			return
+		}
+		req.Header.Add("aaa" , "vav")
+		resp , err := client.Do(req)
+		if err != nil {
+			return
+		}
+		defer resp.Body.Close()
+		data , err := ioutil.ReadAll(resp.Body)
+		fmt.Println(string(data))
+
+
+		事件注册：
+
+		//事件系统需要提供一个外部注册入口 这个入口传入事件名称和对应的事件函数
+		var eventByName = make(map[string][]func(i interface{}))
+		//注册消息
+		func RegisterEvent(name string , callback func(interface{}))  {
+			list , _ := eventByName[name]
+			list = append(list , callback)
+			eventByName[name] = list
+		}
+		//消费消息
+		func CallEvent(name string , param string)  {
+			list , ok := eventByName[name]
+			if !ok {
+				return
+			}
+			for _ , v := range list{
+				v(param)
+			}
+		}
+
+		type Login struct {
+
+		}
+
+		func (l *Login)OnEvent(param interface{})  {
+			fmt.Println("login event param:" , param)
+		}
+		type Reg struct {
+
+		}
+		func (l *Reg)OnEvent(param interface{})  {
+			fmt.Println("reg event param:" , param)
+		}
+
+		func main() {
+			//注册事件
+			l := new(Login)
+			RegisterEvent("login" , l.OnEvent)
+			r := new(Reg)
+			RegisterEvent("reg" , r.OnEvent)
+
+			//消费事件
+			CallEvent("login" , "login")
+			CallEvent("reg" , "reg")
+		}
+	5.6 类型内嵌和结构体内嵌
+
+6 接口
+	6.1 声明接口
+		type 接口类型名 interface {
+			方法名(方法参数)返回值1
+			方法名2(方法参数)返回值1
+		}
+		接口类型名 使用type将接口定义为自定义类型名
+		方法名：当接口名首字母大写 并且方法名首字母大写时可以被包外的代码访问
+		type Writer interface {
+			Write(p []byte)(n int , err error)
+		}
+		实现接口的条件：
+	6.2 实现接口的条件
+		接口被实现的条件之一：接口的方法和实现接口的类型方法保持一致
+		type DataWriter interface {
+			Write(p []byte)(n int , err error)
+		}
+		type File struct {
+
+		}
+		func NewFile() *File {
+			return &File{}
+		}
+		func (f *File)Write(p []byte) (n int , err error) {
+			fmt.Println("写入数据。。。。")
+			return 0 , nil
+		}
+		func main() {
+			var w DataWriter
+			f := NewFile()
+			w = f
+			n , err := w.Write([]byte("sssssssssssssssss"))
+			fmt.Println(n , err)
+		}
+		接口被实现的条件之二：接口定义的所有方法均被实现
+	6.3 理解接口和类型的关系
+		1.一个类型可以实现多个接口
+		2.多个类型可以实现相同的接口
+
+	6.4 便于扩展输出方式的日志系统
+
+	6.5使用接口进行数据排序
+		type Sort interface {
+			Desc([]byte)[]byte
+			Asc([]byte)[]byte
+		}
+		type BubbleSort struct {
+		}
+		type QuickSort struct {
+		}
+
+
+	6.6 接口的嵌套组合
+		type Writer interface {
+			Write(p []byte)(n int , err error)
+		}
+		type Closer interface {
+			Close() error
+		}
+		type WriterCloser interface {
+			Writer
+			Closer
+		}
+
+	6.7 在接口和类型间转换
+		类型断言
+		t , ok := i.(T)
+		i 代表接口变量
+		T 代表转换的目标类型
+		t 代表转换后的变量
+		将接口转换为其他接口
+
+	6.8 空接口类型 -- 能保存所有类型的值
+		var any interface{}
+		var a = 1
+		any = a
+		fmt.Println(any)
+		var b = "ssss"
+		any = b
+		fmt.Println(b)
+		//从接口获取值 需要断言
+		var b string = any.(String)
+
+		var a interface{} = 1
+		var b interface{} = "ss"
+		fmt.Println(b == a)
+		//false
+	6.9 使用空接口实现可以保存任何值的字典
+		type Dic struct {
+			Data map[interface{}]interface{}
+		}
+	6.10 类型分支 -- 批量判断空接口中变量的类型
+		switch v.(type) {
+			case int:
+
+			case string:
+
+			default:
+		}
+
+	6.11 示例：有限状态机
+
+7 包
+	7.1工程环境
+	7.2 创建包package
+		package 包名
+		特性如下一个目录下的同级文件属于一个包
+		包名可以与其目录不同名
+		包名为main的包为应用程序入口包，边医院吗没有main包时，将无法编译出可以执行文件
+
+	7.3 导出标识符
+		结构体，变量 接口 函数 首字母大写可以包外访问 小写只能包内访问
+	7.4 导入包 -- 在代码中使用其他包的代码
+		关键字 import
+		单行导入 import "包名"
+		多行导入 import (
+			"包1"
+			"包2"
+			...
+		)
+		导入后自定义包名
+		import (
+			a "包名1"
+		)
+		匿名包导入
+		import (
+			_ "包名1"
+		)
+		包在程序启动前的初始化入口：init
+
+	7.5 示例 工厂模式自动注册
+
+
+8 并发
+	8.1 轻量级线程 goroutine -- 根据需要随时创建的线程
+		关键字 go
+		格式 go 函数名 (参数列表)
+		匿名函数的goroutine
+		go func(参数列表){
+
+		}(调用参数列表)
+	8.2 通道 channel -- 在多个 goroutine 间通信的管道
+		解决内存静态问题
+		var 通道名 chan 通道类型
+		声明后需要make才能使用
+		var ch = make(chan int , 10)
+		ch2 := make(chan interface{})
+		type S struct {
+			Name string
+		}
+		ch := make(chan *S)
+		使用通道发送数据的格式
+		<- 往通道内发送数据
+		-> 从通道内取出数据
+
+		1.通道的收发操作在不同的两个goroutine间进行
+		2.接收将持续的阻塞 直到发送方发送数据
+		3.每次只接收一个元素
+		阻塞接收
+			data := <- ch
+		非阻塞接收 -- 非阻塞接收可能会造成高CPU占用 因此使用非常少
+			data , ok := <- ch
+		阻塞接收数据 忽略从通道返回的数据
+			<- ch
+		循环接收数据
+			for data := range <- ch {
+
+			}
+		单向通道 -- 通道中的单行道
+			var ch chan<- 元素类型 //定义只能发送的通道
+			var ch <-chan 元素类型 //定义只能接收的通道
+			ch := make(<-chan int) //创建只能接收的通道
+			ch := make(chan<- int) //创建只能发送的通道
+		带缓冲的通道
+			ch := make(chan int , 10) 缓冲大小10
+		阻塞条件：
+			带缓冲的通道被填满时，尝试再次发送数据时发生阻塞
+			带缓冲的通道为空时，尝试接收数据时发送阻塞
+		通道的多路复用 -- 同时处理接收和发送多个通道的数据
+			go语言中提供了select关键字，可以同时相应多个通道的操作。select的每个case都会对饮搞一个通道的收发过程，当收发完成时就会触发case中相应语句。
+			select {
+				case 操作1：
+					相应操作1
+				case 操作2：
+					相应操作2
+			}
+		示例：模拟RPC
+		func RPCClient(ch chan string , req string) (string , error) {
+			ch <- req
+			select {
+				case ack := <- ch://接收服务端返回的数据
+					return ack , nil
+			case <- time.After(2*time.Second)://模拟超时
+				return "", errors.New("Time out")
+			}
+		}
+		func RPCServer(ch chan string) {
+			for {
+				data := <- ch
+				fmt.Println("server received:" , data)
+				time.Sleep(3 *time.Second)
+				ch <- "aaa"
+			}
+		}
+		func main() {
+			ch := make(chan string)
+			go RPCServer(ch)
+			re , err := RPCClient(ch , "aaa")
+			fmt.Println(re , err)
+		}
+
+	延迟打印：
+		exit := make(chan int)
+		time.AfterFunc(time.Second , func() {
+			fmt.Println("aaaaaaaaaaa")
+			exit <- 0
+		})
+		<-exit
+	定点计时：
+		timer := time.NewTimer(10 * time.Second)
+		ticker := time.NewTicker(500 * time.Millisecond)
+		for {
+			select {
+				case <-timer.C:
+					fmt.Println("timer")
+					goto HERE
+				case <-ticker.C:
+					fmt.Println("ticker")
+			}
+		}
+		HERE:
+		fmt.Println("aaa")
+	关闭通道后继续使用通道
+		1.格式 
+		close(ch)
+		2.对关闭的通道进行写 会触发panic
+		3.从已关闭的通道接收数据 将不会发生阻塞
+9 反射
+	9.1 反射的类型对象 (reflect.Type)
+		使用reflect.TypeOf(int) 可以获得任意值的类型对象
 
 
 
