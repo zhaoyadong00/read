@@ -956,7 +956,46 @@
 	9.1 反射的类型对象 (reflect.Type)
 		使用reflect.TypeOf(int) 可以获得任意值的类型对象
 
+10 编译与工具
+	10.1 go build 无参数编译
+		go build 编译main目录下的main函数
+	10.1.2 go build + 文件列表
+		go build main1.go main2.go
+		go build -o main main1.go -o 指定输出文件名
 
+	10.1.3 go build + 包
+		设置gopath后 可以直接根据包名进行编译
+		go build -o main ./main
+	10.2 go build 后运行
+		go run main.go
+		 go run 不能使用 go run + 包的方式进行编译
+	10.3 编译并安装
+		go install
+	10.4 一键获取代码 编译并安装
+		go get -v ...
+		go get github.com/dev/....
+		go get 参数
+			-v 显示操作流程的日志及信息 方便检查错误
+			-u 下载丢失的包 但不会更新已存在的包
+			-d 只下载 不安装
+			-insecure 允许使用不安装的http方式进行下载
+	10.5 测试 go test
+		单元测试文件 必须以_test.go 结尾
+		运行单元测试命令
+		go test hello_test.go
+		运行指定单元测试用例
+		go test -v -run TestA hello_test.go 
 
+	10.6 性能分析
+		go pprof
 
+11 避坑与技巧
+	11.1 合理地使用并发特性
+
+	11.2 反射：性能和灵活性的双刃剑
+
+	11.3 接口的nil判断
+
+	11.4 map的多键索引 -- 多个数组条件可以同时查询
+	
 
